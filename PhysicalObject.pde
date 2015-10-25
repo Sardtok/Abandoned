@@ -2,6 +2,7 @@ class PhysicalObject {
   PImage img;
   int frame;
   int frames;
+  int framesLeft;
   float x;
   float y;
   int dir = RIGHT;

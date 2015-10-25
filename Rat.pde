@@ -8,7 +8,9 @@ class Rat extends PhysicalObject {
     }
     
     x += dir == RIGHT ? 1 : -1;
-    if (frameCount % 4 == 0) {
+    framesLeft--;
+    if (framesLeft <= 0) {
+      framesLeft = 4;
       frame = (frame + 1) % 2; 
     }
     super.draw();

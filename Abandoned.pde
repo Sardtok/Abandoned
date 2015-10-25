@@ -54,7 +54,7 @@ void setup() {
   }
 
   baby.img = loadImage("Baby.png");
-  baby.frames = 5;
+  baby.frames = 7;
   
   startGame();
 }

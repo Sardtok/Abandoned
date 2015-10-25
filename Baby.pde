@@ -1,21 +1,45 @@
 class Baby extends PhysicalObject {
 
+  int animation = 0;
   int aniIndex = 0;
-  int[] walkAnimation = { 0, 1, 2, 0, 3, 4 };
+  int[][] animations = {
+    { 0, 1, 2, 0, 3, 4 },
+    { 5, 6 }
+  };
 
   int state = 0;
   int currentFloor = 3;
 
   void draw() {
-    if (frameCount % 8 == 0) {
-      aniIndex = (aniIndex + 1) % walkAnimation.length;
-      frame = walkAnimation[aniIndex];
+    if ((buttons & 16) != 0 && animation == 0) {
+      animation = 1;
+      aniIndex = 0;
+      framesLeft = 8;
+      frame = animations[animation][aniIndex];
+    } else if (animation == 0 && buttons == 0) {
+      animation = 0;
+      aniIndex = 0;
+      framesLeft = 8;
+      frame = animations[animation][aniIndex];
     }
+    
+    framesLeft--;
+    
+    if (framesLeft <= 0) {
+      aniIndex++;
+      if (aniIndex >= animations[animation].length) {
+        aniIndex = 0;
+        animation = 0;
+      }
+      frame = animations[animation][aniIndex];
+      framesLeft = 8;
+    }
+
 
     if ((buttons & 1) != 0 && state == FLOOR) {
       if ((buttons & 2) == 0) {
         dir = LEFT;
-        x--;
+        x -= 0.5;
       }
     } else if ((buttons & 2) != 0 && state == FLOOR) {
       dir = RIGHT;
