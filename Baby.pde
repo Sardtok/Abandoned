@@ -1,11 +1,10 @@
 class Baby extends PhysicalObject {
-
-  int animation = 0;
-  int aniIndex = 0;
-  int[][] animations = {
-    { 0, 1, 2, 0, 3, 4 },
-    { 5, 6 }
-  };
+  Baby() {
+    animations = new int[][] {
+      { 0, 1, 2, 0, 3, 4 }, 
+      { 5, 6 }
+    };
+  }
 
   int state = 0;
   int currentFloor = 3;
@@ -22,9 +21,9 @@ class Baby extends PhysicalObject {
       framesLeft = 8;
       frame = animations[animation][aniIndex];
     }
-    
+
     framesLeft--;
-    
+
     if (framesLeft <= 0) {
       aniIndex++;
       if (aniIndex >= animations[animation].length) {
@@ -38,6 +37,7 @@ class Baby extends PhysicalObject {
     if (animation == 1) {
       for (Rat r : rats) {
         if (dist(r.x, r.y, x, y) < 16) {
+          r.scare();
           r.state = SCARED;
           r.target = mouseHolePositions[currentFloor - 1];
         }
@@ -80,11 +80,11 @@ class Baby extends PhysicalObject {
       }
     } else if ((buttons & 8) != 0) {
       if (state != STAIRS) {
-          if (abs(stairsDown[currentFloor] - x) < 4) {
-            currentFloor++;
-            state = STAIRS;
-            y += 0.25;
-          }
+        if (abs(stairsDown[currentFloor] - x) < 4) {
+          currentFloor++;
+          state = STAIRS;
+          y += 0.25;
+        }
       } else {
         y += 0.25;
         if (y == floorPositions[currentFloor] - img.height / 2) {

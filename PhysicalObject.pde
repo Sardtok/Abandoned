@@ -6,6 +6,17 @@ class PhysicalObject {
   float x;
   float y;
   int dir = RIGHT;
+
+  int animationSpeed;
+  int animation = 0;
+  int aniIndex = 0;
+  int[][] animations;
+  
+  void setAnimation(int animation) {
+    this.animation = animation;
+    aniIndex = 0;
+    framesLeft = animationSpeed;
+  }
   
   void draw() {
     pushMatrix();

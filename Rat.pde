@@ -1,20 +1,34 @@
 class Rat extends PhysicalObject {
+  int holePosition;
   int target;
   int state;
-  int animation = 0;
-  int aniIndex = 0;
-  int[][] animations = {
-    {0, 1}, 
-    {2, 3}, 
-    {4, 5}, 
-    {6, 7}
-  };
+
+  Rat() {
+    animations = new int[][] {
+      {0, 1},
+      {2, 3, 2, 3},
+      {4, 5},
+      {6, 7}
+    };
+    animationSpeed = 4;
+  }
+
+  void scare() {
+    if (state != WALKING) {
+      return;
+    }
+
+    target = holePosition;
+    state = SCARED;
+    setAnimation(1);
+  }
 
   void draw() {
     if (state == WALKING || state == FLEEING) {
       if (target - x == 0) {
         if (state == FLEEING) {
           state = ENTERING;
+          setAnimation(2);
         }
         target = (int)random(40, 168);
       } else if (target - x > 0) {
@@ -26,29 +40,32 @@ class Rat extends PhysicalObject {
     }
     framesLeft--;
 
-    switch (state) {
-      case SCARED:
-        animation = 1;
-        break;
-      case ENTERING:
-        animation = 2;
-        break;
-      case EXITING:
-        animation = 3;
-        break;
-      default:
-        animation = 0;
-        break;
-    }
-    if (state == SCARED) {
-      animation = 1;
-    }
-
     if (framesLeft <= 0) {
       framesLeft = 4;
-      aniIndex = (aniIndex + 1) % 2;
-      if (state == SCARED && aniIndex == 0) {
-        state = FLEEING;
+      aniIndex = (aniIndex + 1) % (animations[animation].length);
+      if (aniIndex == 0) {
+        switch (state) {
+        case SCARED:
+          state = FLEEING;
+          setAnimation(0);
+          break;
+        case ENTERING:
+          state = INSIDE;
+          framesLeft = (int) random(300, 1200);
+          x = -16;
+          break;
+        case INSIDE:
+          state = EXITING;
+          target = 96;
+          setAnimation(3);
+          x = holePosition;
+          dir = target - x > 0 ? RIGHT : LEFT;
+          break;
+        case EXITING:
+          state = WALKING;
+        default:
+          setAnimation(0);
+        }
       }
       frame = animations[animation][aniIndex];
     }

@@ -5,7 +5,8 @@ WALKING = 0,
 SCARED = 1,
 FLEEING = 2,
 ENTERING = 3,
-EXITING = 4;
+EXITING = 4,
+INSIDE = 5;
 
 color[] basePalette = {
   #140c1c, 
@@ -57,6 +58,7 @@ void setup() {
     Rat r = rats[i] = new Rat();
     r.img = rat;
     r.frames = 8;
+    r.holePosition = mouseHolePositions[i];
   }
 
   baby.img = loadImage("Baby.png");
@@ -68,8 +70,10 @@ void setup() {
 void startGame() {
   for (int i = 0; i < rats.length; i++) {
     Rat r = rats[i];
-    r.x = 60;
+    r.x = -16;
     r.y = floorPositions[i + 1] - 4;
+    r.state = INSIDE;
+    r.framesLeft = (int) random(120);
   }
   baby.x = 8;
   baby.y = floorPositions[floorPositions.length - 1] - baby.img.height / 2;
