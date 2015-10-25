@@ -1,3 +1,7 @@
+static final int
+FLOOR = 0,
+STAIRS = 1;
+
 color[] basePalette = {
   #140c1c, 
   #442434, 
@@ -28,6 +32,8 @@ PImage fg;
 PImage rat;
 
 int[] floorPositions = { 39, 63, 87, 108 };
+int[] stairsUp = {-16, 124, 88, 132};
+int[] stairsDown = {168, 44, 168, -16};
 Rat[] rats = new Rat[3];
 Baby baby = new Baby();
 
@@ -61,6 +67,8 @@ void startGame() {
   }
   baby.x = 96;
   baby.y = floorPositions[floorPositions.length - 1] - baby.img.height / 2;
+  baby.state = 0;
+  baby.currentFloor = 3;
 }
 
 void draw() {

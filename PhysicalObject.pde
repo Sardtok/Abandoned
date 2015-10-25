@@ -2,8 +2,8 @@ class PhysicalObject {
   PImage img;
   int frame;
   int frames;
-  int x;
-  int y;
+  float x;
+  float y;
   int dir = RIGHT;
   
   void draw() {
