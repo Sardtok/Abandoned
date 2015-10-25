@@ -67,7 +67,7 @@ void startGame() {
     r.x = 60;
     r.y = floorPositions[i + 1] - 4;
   }
-  baby.x = 96;
+  baby.x = 8;
   baby.y = floorPositions[floorPositions.length - 1] - baby.img.height / 2;
   baby.state = 0;
   baby.currentFloor = 3;
