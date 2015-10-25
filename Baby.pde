@@ -35,6 +35,13 @@ class Baby extends PhysicalObject {
       framesLeft = 8;
     }
 
+    if (animation == 1) {
+      for (Rat r : rats) {
+        if (dist(r.x, r.y, x, y) < 16) {
+          r.state = SCARED;
+        }
+      }
+    }
 
     if ((buttons & 1) != 0 && state == FLOOR) {
       if ((buttons & 2) == 0) {

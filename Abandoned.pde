@@ -1,6 +1,7 @@
 static final int
 FLOOR = 0,
-STAIRS = 1;
+STAIRS = 1,
+SCARED = 2;
 
 color[] basePalette = {
   #140c1c, 
@@ -31,6 +32,7 @@ PImage bg;
 PImage fg;
 PImage rat;
 
+int[] mouseHolePositions = {170, 42, 170};
 int[] floorPositions = { 39, 63, 87, 108 };
 int[] stairsUp = {-16, 124, 88, 132};
 int[] stairsDown = {168, 44, 168, -16};
