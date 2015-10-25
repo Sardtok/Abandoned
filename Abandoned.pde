@@ -26,6 +26,7 @@ PImage fg;
 PImage rat;
 
 Rat[] rats = new Rat[3];
+Baby baby = new Baby();
 
 void setup() {
   size(768, 432, JAVA2D);
@@ -44,6 +45,11 @@ void setup() {
     r.x = 60;
     r.y = 61 + i * 24;
   }
+  
+  baby.img = loadImage("Baby.png");
+  baby.frames = 5;
+  baby.x = 96;
+  baby.y = 54;
 }
 
 void draw() {
@@ -55,5 +61,6 @@ void draw() {
     r.draw();
   }
   
+  baby.draw();
   image(fg, 0, 0);
 }
