@@ -27,11 +27,12 @@ PImage bg;
 PImage fg;
 PImage rat;
 
+int[] floorPositions = { 39, 63, 87, 108 };
 Rat[] rats = new Rat[3];
 Baby baby = new Baby();
 
 void setup() {
-  size(768, 432, JAVA2D);
+  fullScreen(JAVA2D);
   noSmooth();
 
   SCALE = min(width / 192.0, height / 108.0);
@@ -43,15 +44,23 @@ void setup() {
   for (int i = 0; i < rats.length; i++) {
     Rat r = rats[i] = new Rat();
     r.img = rat;
-    r.frames = 7;
-    r.x = 60;
-    r.y = 61 + i * 24;
+    r.frames = 8;
   }
 
   baby.img = loadImage("Baby.png");
   baby.frames = 5;
+  
+  startGame();
+}
+
+void startGame() {
+  for (int i = 0; i < rats.length; i++) {
+    Rat r = rats[i];
+    r.x = 60;
+    r.y = floorPositions[i + 1] - 4;
+  }
   baby.x = 96;
-  baby.y = 54;
+  baby.y = floorPositions[floorPositions.length - 1] - baby.img.height / 2;
 }
 
 void draw() {
