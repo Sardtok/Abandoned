@@ -39,6 +39,7 @@ class Baby extends PhysicalObject {
       for (Rat r : rats) {
         if (dist(r.x, r.y, x, y) < 16) {
           r.state = SCARED;
+          r.target = mouseHolePositions[currentFloor - 1];
         }
       }
     }

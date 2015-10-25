@@ -1,7 +1,11 @@
 static final int
 FLOOR = 0,
 STAIRS = 1,
-SCARED = 2;
+WALKING = 0,
+SCARED = 1,
+FLEEING = 2,
+ENTERING = 3,
+EXITING = 4;
 
 color[] basePalette = {
   #140c1c, 
@@ -32,7 +36,7 @@ PImage bg;
 PImage fg;
 PImage rat;
 
-int[] mouseHolePositions = {170, 42, 170};
+int[] mouseHolePositions = {168, 44, 168};
 int[] floorPositions = { 39, 63, 87, 108 };
 int[] stairsUp = {-16, 124, 88, 132};
 int[] stairsDown = {168, 44, 168, -16};
@@ -101,6 +105,7 @@ void keyPressed() {
     buttons |= 8;
     break;
   case RETURN:
+  case ENTER:
     buttons |= 16;
     break;
   }
@@ -139,6 +144,7 @@ void keyReleased() {
     buttons &= ~8;
     break;
   case RETURN:
+  case ENTER:
     buttons &= ~16;
     break;
   }
