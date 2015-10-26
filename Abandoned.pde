@@ -59,10 +59,12 @@ void setup() {
     r.img = rat;
     r.frames = 8;
     r.holePosition = mouseHolePositions[i];
+    r.animationSpeed = 4;
   }
 
   baby.img = loadImage("Baby.png");
   baby.frames = 7;
+  baby.animationSpeed = 8;
   
   startGame();
 }

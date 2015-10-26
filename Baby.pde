@@ -6,14 +6,13 @@ class Baby extends PhysicalObject {
     };
   }
 
-  int state = 0;
   boolean isMoving = false;
   int currentFloor = 3;
 
   void walkStairs() {
     boolean up = false;
     boolean down = false;
-    
+
     if ((buttons & 4) != 0) {
       up = true;
     }
@@ -35,7 +34,7 @@ class Baby extends PhysicalObject {
         up = true;
       }
     }
-    
+
     if (up && !down) {
       if (state != STAIRS) {
         if (abs(stairsUp[currentFloor] - x) < 4) {
@@ -65,11 +64,11 @@ class Baby extends PhysicalObject {
       }
       dir = currentFloor % 2 == 0 ? RIGHT : LEFT;
     }
-    
+
     if (state != STAIRS) {
       return;
     }
-    
+
     float along = (float)(y - floorPositions[currentFloor]) / (floorPositions[currentFloor - 1] - floorPositions[currentFloor]);
     if (currentFloor % 2 == 0) {
       x = max(stairsDown[currentFloor - 1], stairsUp[currentFloor]) - (int)(along * abs(stairsDown[currentFloor - 1] - stairsUp[currentFloor])) + 5;
@@ -78,37 +77,29 @@ class Baby extends PhysicalObject {
     }
   }
 
+  void smackRats() {
+    for (Rat r : rats) {
+      float distance = x - r.x;
+      if (abs(y - r.y) < 4 &&((dir == LEFT && distance < 16 && distance > 8)
+        || (dir == RIGHT && distance > -16 && distance < -8))) {
+        r.scare();
+      }
+    }
+  }
+
+  void animationComplete() {
+    setAnimation(0);
+  }
+
   void draw() {
     if ((buttons & 16) != 0 && animation == 0) {
-      animation = 1;
-      aniIndex = 0;
-      framesLeft = 8;
-      frame = animations[animation][aniIndex];
+      setAnimation(1);
     } else if (animation == 0 && buttons == 0) {
-      animation = 0;
-      aniIndex = 0;
-      framesLeft = 8;
-      frame = animations[animation][aniIndex];
-    }
-
-    framesLeft--;
-
-    if (framesLeft <= 0) {
-      aniIndex++;
-      if (aniIndex >= animations[animation].length) {
-        aniIndex = 0;
-        animation = 0;
-      }
-      frame = animations[animation][aniIndex];
-      framesLeft = 8;
+      setAnimation(0);
     }
 
     if (animation == 1) {
-      for (Rat r : rats) {
-        if (dist(r.x, r.y, x, y) < 16) {
-          r.scare();
-        }
-      }
+      smackRats();
     }
 
     if ((buttons & 1) != 0 && state == FLOOR) {
