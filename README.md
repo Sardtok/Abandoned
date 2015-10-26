@@ -1,6 +1,6 @@
 # Dumpster Baby
 
-Entry for Sonen Game Jam Autum 2015
+Entry for Sonen Game Jam Autum 2015  
 Theme: Abandoned
 
 ## Back story
@@ -13,8 +13,10 @@ you can scare them off with your mighty ground slam.
 
 ## Controls
 
-A or Left - Crawl left
-D or Right - Crawl right
-W or Up - Climb stairs
-S or Down - Descend stairs
-Spacebar or Enter - Slam the ground
+Key       | Alternate | Action
+----------|-----------|--------
+ A        | Left      | Crawl left
+ D        | Right     | Crawl right
+ W        | Up        | Climb stairs
+ S        | Down      | Descend stairs
+ Spacebar | Enter     | Slam the ground
