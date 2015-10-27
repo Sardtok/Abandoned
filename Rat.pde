@@ -62,8 +62,10 @@ class Rat extends PhysicalObject {
           count = 0;
           state = FLEEING;
           target = holePosition;
+        } else if (dir == LEFT) {
+          target = (int) min(168, x + random(32, 128));
         } else {
-          target = (int)random(40, 168);
+          target = (int) max(40, x - random(32, 128));
         }
       } else if (target - x > 0) {
         dir = RIGHT;
@@ -72,7 +74,7 @@ class Rat extends PhysicalObject {
       }
       x += dir == RIGHT ? 1 : -1;
     }
-    
+
     super.draw();
   }
 }
