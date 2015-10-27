@@ -1,11 +1,12 @@
 static final int
 FLOOR = 0,
 STAIRS = 1,
+SLAM = 2,
 WALKING = 0,
-SCARED = 1,
+EXITING = 1,
 FLEEING = 2,
 ENTERING = 3,
-EXITING = 4,
+SCARED = 4,
 INSIDE = 5;
 
 color[] basePalette = {

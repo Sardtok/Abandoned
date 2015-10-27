@@ -6,6 +6,7 @@ class Baby extends PhysicalObject {
     };
   }
 
+  float pX;
   boolean isMoving = false;
   int currentFloor = 3;
 
@@ -88,11 +89,14 @@ class Baby extends PhysicalObject {
   }
 
   void animationComplete() {
+    state &= ~SLAM;
     setAnimation(0);
   }
 
   void draw() {
+    pX = x;
     if ((buttons & 16) != 0 && animation == 0) {
+      state |= SLAM;
       setAnimation(1);
     } else if (animation == 0 && buttons == 0) {
       setAnimation(0);
@@ -116,6 +120,9 @@ class Baby extends PhysicalObject {
       walkStairs();
     }
 
+    if (state == FLOOR && pX == x) {
+      setAnimation(0);
+    }
     super.draw();
   }
 }
