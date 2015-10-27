@@ -1,6 +1,7 @@
 class Rat extends PhysicalObject {
   int holePosition;
   int target;
+  int count;
 
   Rat() {
     animations = new int[][] {
@@ -29,6 +30,7 @@ class Rat extends PhysicalObject {
       setAnimation(0);
       break;
     case ENTERING:
+      count = 0;
       state = INSIDE;
       setAnimation(0);
       framesLeft = (int) random(300, 1200);
@@ -51,11 +53,18 @@ class Rat extends PhysicalObject {
   void draw() {
     if (state == WALKING || state == FLEEING) {
       if (target - x == 0) {
+        count++;
         if (state == FLEEING) {
           state = ENTERING;
           setAnimation(2);
         }
-        target = (int)random(40, 168);
+        if (count >= 10 && random(1.0) > 0.75) {
+          count = 0;
+          state = FLEEING;
+          target = holePosition;
+        } else {
+          target = (int)random(40, 168);
+        }
       } else if (target - x > 0) {
         dir = RIGHT;
       } else {
