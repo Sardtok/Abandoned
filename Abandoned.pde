@@ -31,6 +31,8 @@ color[] basePalette = {
 color[] palette = basePalette;
 
 int buttons = 0;
+int hiScore = 0;
+int score = 0;
 
 float SCALE = 1.0;
 
@@ -39,9 +41,8 @@ PImage fg;
 PImage rat;
 
 int[] mouseHolePositions = {168, 44, 168};
-int[] floorPositions = { 39, 63, 87, 108 };
-int[] stairsUp = {-16, 124, 88, 132};
-int[] stairsDown = {168, 44, 168, -16};
+Platform[] floors = { new Platform(), new Platform(), new Platform(), new Platform() };
+
 Rat[] rats = new Rat[3];
 Baby baby = new Baby();
 
@@ -55,8 +56,17 @@ void setup() {
   fg = loadImage("FireEscape.png");
   rat = loadImage("Rat.png");
 
+  floors[0].y = 39;
+  floors[1].y = 63;
+  floors[2].y = 87;
+  floors[3].y = 108;
+  
+  new Stairway(132, 168, floors[3], floors[2]);
+  new Stairway(85, 43, floors[2], floors[1]);
+  new Stairway(126, 168, floors[1], floors[0]);
+  
   for (int i = 0; i < rats.length; i++) {
-    Rat r = rats[i] = new Rat();
+    Rat r = rats[i] = new Rat(floors[i + 1]);
     r.img = rat;
     r.frames = 8;
     r.holePosition = mouseHolePositions[i];
@@ -74,14 +84,13 @@ void startGame() {
   for (int i = 0; i < rats.length; i++) {
     Rat r = rats[i];
     r.x = -16;
-    r.y = floorPositions[i + 1] - 4;
     r.state = INSIDE;
     r.framesLeft = (int) random(120);
   }
   baby.x = 8;
-  baby.y = floorPositions[floorPositions.length - 1] - baby.img.height / 2;
+  baby.currentFloor = floors[floors.length - 1];
+  baby.y = baby.currentFloor.y - baby.img.height / 2;
   baby.state = 0;
-  baby.currentFloor = 3;
 }
 
 void draw() {

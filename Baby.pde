@@ -8,7 +8,26 @@ class Baby extends PhysicalObject {
 
   float pX;
   boolean isMoving = false;
-  int currentFloor = 3;
+  Platform currentFloor;
+  Stairway currentStairs;
+
+  void walkStairs(float movement) {
+    if (currentStairs == null) {
+      return;
+    }
+
+    y += movement;
+    x = currentStairs.getX(y);
+    if (y == currentStairs.top.y - img.height / 2) {
+      state = FLOOR;
+      currentFloor = currentStairs.top;
+      currentStairs = null;
+    } else if (y == currentStairs.bottom.y - img.height / 2) {
+      state = FLOOR;
+      currentFloor = currentStairs.bottom;
+      currentStairs = null;
+    }
+  }
 
   void walkStairs() {
     boolean up = false;
@@ -20,14 +39,15 @@ class Baby extends PhysicalObject {
     if ((buttons & 8) != 0) {
       down = true;
     }
-    if (currentFloor % 2 == 0) {
+    if ((buttons & 1) != 0 && state == STAIRS) {
       if ((buttons & 1) != 0) {
         up = true;
       }
       if ((buttons & 2) != 0) {
         down = true;
       }
-    } else {
+    }
+    if ((buttons & 2) != 0 && state == STAIRS) {
       if ((buttons & 1) != 0) {
         down = true;
       }
@@ -38,43 +58,28 @@ class Baby extends PhysicalObject {
 
     if (up && !down) {
       if (state != STAIRS) {
-        if (abs(stairsUp[currentFloor] - x) < 4) {
-          state = STAIRS;
-          y -= 0.25;
-        }
-      } else {
-        y -= 0.25;
-        if (y == floorPositions[currentFloor - 1] - img.height / 2) {
-          state = FLOOR;
-          currentFloor--;
+        for (Stairway stairs : currentFloor.up) {
+          if (stairs.climb(x)) {
+            state = STAIRS;
+            x = stairs.botX;
+            currentStairs = stairs;
+          }
         }
       }
-      dir = currentFloor % 2 == 0 ? LEFT : RIGHT;
+      
+      walkStairs(-0.25);
     } else if (down && !up) {
       if (state != STAIRS) {
-        if (abs(stairsDown[currentFloor] - x) < 4) {
-          currentFloor++;
-          state = STAIRS;
-          y += 0.25;
-        }
-      } else {
-        y += 0.25;
-        if (y == floorPositions[currentFloor] - img.height / 2) {
-          state = FLOOR;
+        for (Stairway stairs : currentFloor.down) {
+          if (stairs.descend(x)) {
+            state = STAIRS;
+            x = stairs.topX;
+            currentStairs = stairs;
+          }
         }
       }
-      dir = currentFloor % 2 == 0 ? RIGHT : LEFT;
-    }
-
-    if (state != STAIRS) {
-      return;
-    }
-
-    float along = (float)(y - floorPositions[currentFloor]) / (floorPositions[currentFloor - 1] - floorPositions[currentFloor]);
-    if (currentFloor % 2 == 0) {
-      x = max(stairsDown[currentFloor - 1], stairsUp[currentFloor]) - (int)(along * abs(stairsDown[currentFloor - 1] - stairsUp[currentFloor])) + 5;
-    } else {
-      x = min(stairsDown[currentFloor - 1], stairsUp[currentFloor]) + (int)(along * abs(stairsDown[currentFloor - 1] - stairsUp[currentFloor])) - 5;
+      
+      walkStairs(0.25);
     }
   }
 
@@ -83,7 +88,9 @@ class Baby extends PhysicalObject {
       float distance = x - r.x;
       if (abs(y - r.y) < 4 &&((dir == LEFT && distance < 16 && distance > 8)
         || (dir == RIGHT && distance > -16 && distance < -8))) {
-        r.scare();
+        if (r.scare()) {
+          score += 100;
+        }
       }
     }
   }
@@ -118,6 +125,10 @@ class Baby extends PhysicalObject {
 
     if ((buttons & 12) != 0 || state == STAIRS) {
       walkStairs();
+    }
+
+    if (x < 8 || x > 172) {
+      x = pX;
     }
 
     if (state == FLOOR && pX == x) {

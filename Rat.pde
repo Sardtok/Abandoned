@@ -2,8 +2,9 @@ class Rat extends PhysicalObject {
   int holePosition;
   int target;
   int count;
+  Platform floor;
 
-  Rat() {
+  Rat(Platform floor) {
     animations = new int[][] {
       {0, 1}, 
       {2, 3, 2, 3}, 
@@ -11,16 +12,19 @@ class Rat extends PhysicalObject {
       {6, 7}
     };
     animationSpeed = 4;
+    this.floor = floor;
+    y = floor.y - 4;
   }
 
-  void scare() {
+  boolean scare() {
     if (state != WALKING) {
-      return;
+      return false;
     }
 
     target = holePosition;
     state = SCARED;
     setAnimation(1);
+    return true;
   }
 
   void animationComplete() {
