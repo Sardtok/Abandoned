@@ -17,12 +17,12 @@ class Baby extends PhysicalObject {
     }
 
     y += movement;
-    x = currentStairs.getX(y);
-    if (y == currentStairs.top.y - img.height / 2) {
+    x = currentStairs.getX(y + img.height / 2);
+    if (y <= currentStairs.top.y - img.height / 2) {
       state = FLOOR;
       currentFloor = currentStairs.top;
       currentStairs = null;
-    } else if (y == currentStairs.bottom.y - img.height / 2) {
+    } else if (y >= currentStairs.bottom.y - img.height / 2) {
       state = FLOOR;
       currentFloor = currentStairs.bottom;
       currentStairs = null;
@@ -40,20 +40,12 @@ class Baby extends PhysicalObject {
       down = true;
     }
     if ((buttons & 1) != 0 && state == STAIRS) {
-      if ((buttons & 1) != 0) {
-        up = true;
-      }
-      if ((buttons & 2) != 0) {
-        down = true;
-      }
+        up |= currentStairs.topX < currentStairs.botX;
+        down |= currentStairs.topX > currentStairs.botX;
     }
     if ((buttons & 2) != 0 && state == STAIRS) {
-      if ((buttons & 1) != 0) {
-        down = true;
-      }
-      if ((buttons & 2) != 0) {
-        up = true;
-      }
+        up |= currentStairs.topX > currentStairs.botX;
+        down |= currentStairs.topX < currentStairs.botX;
     }
 
     if (up && !down) {
@@ -127,6 +119,10 @@ class Baby extends PhysicalObject {
       walkStairs();
     }
 
+    if (pX != x) {
+      dir = x < pX ? LEFT : RIGHT;
+    }
+    
     if (x < 8 || x > 172) {
       x = pX;
     }
