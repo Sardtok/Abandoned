@@ -81,7 +81,7 @@ class Baby extends PhysicalObject {
       if (abs(y - r.y) < 4 &&((dir == LEFT && distance < 16 && distance > 8)
         || (dir == RIGHT && distance > -16 && distance < -8))) {
         if (r.scare()) {
-          score += 100;
+          score(100);
         }
       }
     }

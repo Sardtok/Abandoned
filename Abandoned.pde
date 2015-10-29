@@ -39,6 +39,7 @@ float SCALE = 1.0;
 PImage bg;
 PImage fg;
 PImage rat;
+PImage nums;
 
 int[] mouseHolePositions = {168, 44, 168};
 Platform[] floors = { new Platform(), new Platform(), new Platform(), new Platform() };
@@ -55,6 +56,7 @@ void setup() {
   bg = loadImage("Background.png");
   fg = loadImage("FireEscape.png");
   rat = loadImage("Rat.png");
+  nums = loadImage("Numbers.png");
 
   floors[0].y = 39;
   floors[1].y = 63;
@@ -104,6 +106,36 @@ void draw() {
 
   baby.draw();
   image(fg, 0, 0);
+  drawScores();
+}
+
+void score(int points) {
+  score += points;
+  
+  if (hiScore < score) {
+    hiScore = score;
+  }
+  
+  score %= 1000000;
+  hiScore %= 1000000;
+}
+
+void drawNumber(int number) {
+  for (int i = 0; i < 6; i++) {
+    int digit = number % 10;
+    number /= 10;
+    copy(nums, digit * 4, 0, 4, nums.height, 0, 0, 4, nums.height);
+    translate(-5, 0);
+  }
+}
+
+void drawScores() {
+  pushMatrix();
+  translate(40, 4);
+  drawNumber(score);
+  popMatrix();
+  translate(136, 4);
+  drawNumber(hiScore);
 }
 
 void keyPressed() {
