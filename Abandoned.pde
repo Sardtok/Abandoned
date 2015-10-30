@@ -76,7 +76,7 @@ void setup() {
   }
 
   baby.img = loadImage("Baby.png");
-  baby.frames = 7;
+  baby.frames = 9;
   baby.animationSpeed = 8;
   
   startGame();
@@ -93,6 +93,8 @@ void startGame() {
   baby.currentFloor = floors[floors.length - 1];
   baby.y = baby.currentFloor.y - baby.img.height / 2;
   baby.state = 0;
+  
+  score = 0;
 }
 
 void draw() {

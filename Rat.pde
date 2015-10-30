@@ -79,6 +79,10 @@ class Rat extends PhysicalObject {
       x += dir == RIGHT ? 1 : -1;
     }
 
+    if (state == WALKING && dist(baby.x, baby.y, x, y) < 10) {
+      baby.scare();
+    }
+
     super.draw();
   }
 }

@@ -2,7 +2,8 @@ class Baby extends PhysicalObject {
   Baby() {
     animations = new int[][] {
       { 0, 1, 2, 0, 3, 4 }, 
-      { 5, 6 }
+      { 5, 6 }, 
+      { 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8 }
     };
   }
 
@@ -40,12 +41,12 @@ class Baby extends PhysicalObject {
       down = true;
     }
     if ((buttons & 1) != 0 && state == STAIRS) {
-        up |= currentStairs.topX < currentStairs.botX;
-        down |= currentStairs.topX > currentStairs.botX;
+      up |= currentStairs.topX < currentStairs.botX;
+      down |= currentStairs.topX > currentStairs.botX;
     }
     if ((buttons & 2) != 0 && state == STAIRS) {
-        up |= currentStairs.topX > currentStairs.botX;
-        down |= currentStairs.topX < currentStairs.botX;
+      up |= currentStairs.topX > currentStairs.botX;
+      down |= currentStairs.topX < currentStairs.botX;
     }
 
     if (up && !down) {
@@ -58,7 +59,7 @@ class Baby extends PhysicalObject {
           }
         }
       }
-      
+
       walkStairs(-0.25);
     } else if (down && !up) {
       if (state != STAIRS) {
@@ -70,7 +71,7 @@ class Baby extends PhysicalObject {
           }
         }
       }
-      
+
       walkStairs(0.25);
     }
   }
@@ -87,8 +88,20 @@ class Baby extends PhysicalObject {
     }
   }
 
+  void scare() {
+    if (state == SCARED) {
+      return;
+    }
+
+    state = SCARED;
+    setAnimation(2);
+  }
+
   void animationComplete() {
     state &= ~SLAM;
+    if ((state & SCARED) != 0) {
+      startGame();
+    }
     setAnimation(0);
   }
 
@@ -122,7 +135,7 @@ class Baby extends PhysicalObject {
     if (pX != x) {
       dir = x < pX ? LEFT : RIGHT;
     }
-    
+
     if (x < 8 || x > 172) {
       x = pX;
     }
