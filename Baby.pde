@@ -3,7 +3,8 @@ class Baby extends PhysicalObject {
     animations = new int[][] {
       { 0, 1, 2, 0, 3, 4 }, 
       { 5, 6 }, 
-      { 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8 }
+      { 9, 10, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 7, 8 }, 
+      { 11, 12, 13, 14 }
     };
   }
 
@@ -79,7 +80,8 @@ class Baby extends PhysicalObject {
   void smackRats() {
     for (Rat r : rats) {
       float distance = x - r.x;
-      if (abs(y - r.y) < 4 &&((dir == LEFT && distance < 16 && distance > 8)
+      
+      if ((y - r.y < 2 && y - r.y > -8) && ((dir == LEFT && distance < 16 && distance > 8)
         || (dir == RIGHT && distance > -16 && distance < -8))) {
         if (r.scare()) {
           score(100);
@@ -99,8 +101,13 @@ class Baby extends PhysicalObject {
 
   void animationComplete() {
     state &= ~SLAM;
-    if ((state & SCARED) != 0) {
+    if (state == SCARED) {
       startGame();
+    } else if (state == ENTERING) {
+      int p = score;
+      startGame();
+      score = p;
+      dir = RIGHT;
     }
     setAnimation(0);
   }
@@ -138,6 +145,11 @@ class Baby extends PhysicalObject {
 
     if (x < 8 || x > 172) {
       x = pX;
+    }
+
+    if (x <= 54 && y <= 32 && state == FLOOR) {
+      state = ENTERING;
+      setAnimation(3);
     }
 
     if (state == FLOOR && pX == x) {

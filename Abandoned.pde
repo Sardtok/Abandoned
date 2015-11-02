@@ -5,9 +5,9 @@ SLAM = 2,
 WALKING = 0,
 EXITING = 1,
 FLEEING = 2,
-ENTERING = 3,
-SCARED = 4,
-INSIDE = 5;
+ENTERING = 4,
+SCARED = 8,
+INSIDE = 16;
 
 color[] basePalette = {
   #140c1c, 
@@ -76,7 +76,7 @@ void setup() {
   }
 
   baby.img = loadImage("Baby.png");
-  baby.frames = 9;
+  baby.frames = 16;
   baby.animationSpeed = 8;
   
   startGame();
