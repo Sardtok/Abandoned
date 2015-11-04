@@ -77,15 +77,17 @@ class Baby extends PhysicalObject {
     }
   }
 
-  void smackRats() {
-    for (Rat r : rats) {
-      float distance = x - r.x;
-      
-      if ((y - r.y < 2 && y - r.y > -8) && ((dir == LEFT && distance < 16 && distance > 8)
-        || (dir == RIGHT && distance > -16 && distance < -8))) {
-        if (r.scare()) {
-          score(100);
-        }
+  void smackRat(Rat r) {
+    if (r == null) {
+      return;
+    }
+    
+    float distance = x - r.x;
+
+    if ((y - r.y < 2 && y - r.y > -8) && ((dir == LEFT && distance < 16 && distance > 8)
+      || (dir == RIGHT && distance > -16 && distance < -8))) {
+      if (r.scare()) {
+        score(100);
       }
     }
   }
@@ -122,7 +124,12 @@ class Baby extends PhysicalObject {
     }
 
     if (animation == 1) {
-      smackRats();
+      if (state == STAIRS) {
+        smackRat(currentStairs.top.rat);
+        smackRat(currentStairs.bottom.rat);
+      } else {
+        smackRat(currentFloor.rat);
+      }
     }
 
     if ((buttons & 1) != 0 && state == FLOOR) {

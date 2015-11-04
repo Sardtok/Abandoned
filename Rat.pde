@@ -1,5 +1,4 @@
 class Rat extends PhysicalObject {
-  int holePosition;
   int target;
   int count;
   Platform floor;
@@ -21,7 +20,7 @@ class Rat extends PhysicalObject {
       return false;
     }
 
-    target = holePosition;
+    target = floor.hole;
     state = SCARED;
     setAnimation(1);
     return true;
@@ -44,7 +43,7 @@ class Rat extends PhysicalObject {
       state = EXITING;
       target = 96;
       setAnimation(3);
-      x = holePosition;
+      x = floor.hole;
       dir = target - x > 0 ? RIGHT : LEFT;
       break;
     case EXITING:
@@ -65,7 +64,7 @@ class Rat extends PhysicalObject {
         if (count >= 10 && random(1.0) > 0.75) {
           count = 0;
           state = FLEEING;
-          target = holePosition;
+          target = floor.hole;
         } else if (dir == LEFT) {
           target = (int) min(168, x + random(32, 128));
         } else {

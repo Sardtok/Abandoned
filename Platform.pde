@@ -4,4 +4,12 @@ class Platform {
   int y;
   int left;
   int right;
+  int hole;
+  Rat rat;
+  
+  void draw() {
+    if (rat != null) {
+      rat.draw();
+    }
+  }
 }

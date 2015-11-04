@@ -41,15 +41,14 @@ PImage fg;
 PImage rat;
 PImage nums;
 
-int[] mouseHolePositions = {168, 44, 168};
 Platform[] floors = { new Platform(), new Platform(), new Platform(), new Platform() };
 
-Rat[] rats = new Rat[3];
 Baby baby = new Baby();
 
 void setup() {
   fullScreen(JAVA2D);
   noSmooth();
+  noStroke();
 
   SCALE = min(width / 192.0, height / 108.0);
 
@@ -60,18 +59,24 @@ void setup() {
 
   floors[0].y = 39;
   floors[1].y = 63;
+  floors[1].hole = 168;
   floors[2].y = 87;
+  floors[2].hole = 44;
   floors[3].y = 108;
+  floors[3].hole = 168;
   
   new Stairway(132, 168, floors[3], floors[2]);
   new Stairway(85, 43, floors[2], floors[1]);
   new Stairway(126, 168, floors[1], floors[0]);
   
-  for (int i = 0; i < rats.length; i++) {
-    Rat r = rats[i] = new Rat(floors[i + 1]);
+  for (Platform p : floors) {
+    if (p.hole == 0) {
+      continue;
+    }
+    
+    Rat r = p.rat = new Rat(p);
     r.img = rat;
     r.frames = 8;
-    r.holePosition = mouseHolePositions[i];
     r.animationSpeed = 4;
   }
 
@@ -82,18 +87,28 @@ void setup() {
   startGame();
 }
 
-void startGame() {
-  for (int i = 0; i < rats.length; i++) {
-    Rat r = rats[i];
+void startLevel() {
+  for (Platform p : floors) {
+    Rat r = p.rat;
+    
+    if (r == null) {
+      continue;
+    }
+    
     r.x = -16;
     r.state = INSIDE;
     r.framesLeft = (int) random(120);
   }
+  
+  baby.dir = RIGHT;
   baby.x = 8;
   baby.currentFloor = floors[floors.length - 1];
   baby.y = baby.currentFloor.y - baby.img.height / 2;
   baby.state = 0;
-  
+}
+
+void startGame() {
+  startLevel();
   score = 0;
 }
 
@@ -102,8 +117,8 @@ void draw() {
   background(palette[0]);
   image(bg, 0, 0);
 
-  for (Rat r : rats) {
-    r.draw();
+  for (Platform p : floors) {
+    p.draw();
   }
 
   baby.draw();
