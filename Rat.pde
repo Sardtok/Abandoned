@@ -1,6 +1,7 @@
 class Rat extends PhysicalObject {
   int target;
   int count;
+  float speed;
   Platform floor;
 
   Rat(Platform floor) {
@@ -10,20 +11,22 @@ class Rat extends PhysicalObject {
       {4, 5}, 
       {6, 7}
     };
+    speed = 1.0;
     animationSpeed = 4;
     this.floor = floor;
     y = floor.y - 4;
   }
 
-  boolean scare() {
+  void scare() {
     if (state != WALKING) {
-      return false;
+      return;
     }
 
+    score += speed * 100;
+    speed = min(2, speed + 0.25);
     target = floor.hole;
     state = SCARED;
     setAnimation(1);
-    return true;
   }
 
   void animationComplete() {
@@ -55,9 +58,10 @@ class Rat extends PhysicalObject {
 
   void draw() {
     if (state == WALKING || state == FLEEING) {
-      if (target - x == 0) {
+      if (abs(target - x) < speed) {
         count++;
         if (state == FLEEING) {
+          x = target;
           state = ENTERING;
           setAnimation(2);
         }
@@ -75,7 +79,7 @@ class Rat extends PhysicalObject {
       } else {
         dir = LEFT;
       }
-      x += dir == RIGHT ? 1 : -1;
+      x += dir == RIGHT ? speed : -speed;
     }
 
     if (state == WALKING && abs(baby.x - x) < 8 && baby.y - y > -8 && baby.y - y <= 4) {

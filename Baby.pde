@@ -32,6 +32,10 @@ class Baby extends PhysicalObject {
   }
 
   void walkStairs() {
+    if (state != FLOOR && state != STAIRS) {
+      return;
+    }
+    
     boolean up = false;
     boolean down = false;
 
@@ -86,9 +90,7 @@ class Baby extends PhysicalObject {
 
     if ((y - r.y < 2 && y - r.y > -8) && ((dir == LEFT && distance < 16 && distance > 8)
       || (dir == RIGHT && distance > -16 && distance < -8))) {
-      if (r.scare()) {
-        score(100);
-      }
+      r.scare();
     }
   }
 
@@ -107,7 +109,8 @@ class Baby extends PhysicalObject {
       startGame();
     } else if (state == ENTERING) {
       int p = score;
-      startGame();
+      level++;
+      startLevel();
       score = p;
       dir = RIGHT;
     }

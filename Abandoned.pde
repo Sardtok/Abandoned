@@ -33,6 +33,7 @@ color[] palette = basePalette;
 int buttons = 0;
 int hiScore = 0;
 int score = 0;
+int level = 0;
 
 float SCALE = 1.0;
 
@@ -95,6 +96,7 @@ void startLevel() {
       continue;
     }
     
+    r.speed = 1.0 + min(1, level * 0.25);
     r.x = -16;
     r.state = INSIDE;
     r.framesLeft = (int) random(120);
@@ -108,6 +110,7 @@ void startLevel() {
 }
 
 void startGame() {
+  level = 0;
   startLevel();
   score = 0;
 }
