@@ -40,9 +40,10 @@ float SCALE = 1.0;
 PImage bg;
 PImage fg;
 PImage rat;
-PImage nums;
+PImage alphabet;
 
 Platform[] floors = { new Platform(), new Platform(), new Platform(), new Platform() };
+Level[] levels = new Level[1];
 
 Baby baby = new Baby();
 
@@ -56,15 +57,28 @@ void setup() {
   bg = loadImage("Background.png");
   fg = loadImage("FireEscape.png");
   rat = loadImage("Rat.png");
-  nums = loadImage("Numbers.png");
+  alphabet = loadImage("Alphabet.png");
 
+  levels[0] = new Level();
+  levels[0].floors.add(floors[0]);
+  levels[0].floors.add(floors[1]);
+  levels[0].floors.add(floors[2]);
+  levels[0].floors.add(floors[3]);
   floors[0].y = 39;
+  floors[0].left = 32;
+  floors[0].right = 180;
   floors[1].y = 63;
   floors[1].hole = 168;
+  floors[1].left = 32;
+  floors[1].right = 180;
   floors[2].y = 87;
   floors[2].hole = 44;
+  floors[2].left = 32;
+  floors[2].right = 180;
   floors[3].y = 108;
   floors[3].hole = 168;
+  floors[3].left = 0;
+  floors[3].right = 192;
   
   new Stairway(132, 168, floors[3], floors[2]);
   new Stairway(85, 43, floors[2], floors[1]);
@@ -84,7 +98,8 @@ void setup() {
   baby.img = loadImage("Baby.png");
   baby.frames = 16;
   baby.animationSpeed = 8;
-  
+
+  levels[0].renderForeground();
   startGame();
 }
 
@@ -125,7 +140,7 @@ void draw() {
   }
 
   baby.draw();
-  image(fg, 0, 0);
+  image(levels[0].fg, 0, 0);
   drawScores();
 }
 
@@ -144,7 +159,7 @@ void drawNumber(int number) {
   for (int i = 0; i < 6; i++) {
     int digit = number % 10;
     number /= 10;
-    copy(nums, digit * 4, 0, 4, nums.height, 0, 0, 4, nums.height);
+    copy(alphabet, digit * 4, 0, 4, alphabet.height, 0, 0, 4, alphabet.height);
     translate(-5, 0);
   }
 }
