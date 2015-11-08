@@ -28,8 +28,9 @@ color[] basePalette = {
   #deeed6
 };
 
-char[] playerOne = "1p:".toCharArray();
-char[] hi = "hi:".toCharArray();
+char[] alphaChars = "0123456789-_.,:;!ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅÄÖÜ".toCharArray();
+char[] playerOne = "1P:".toCharArray();
+char[] hi = "HI:".toCharArray();
 
 color[] palette = basePalette;
 
@@ -165,37 +166,21 @@ void drawNumber(int number) {
 
 void drawChar(char c) {
   int index = -1;
-  switch (c) {
-  case '.':
-    index = 36;
-    break;
-  case ':':
-    index = 37;
-    break;
-  case '!':
-    index = 38;
-    break;
-  case '?':
-    index = 39;
-    break;
-  case '0':
-  case '1':
-  case '2':
-  case '3':
-  case '4':
-  case '5':
-  case '6':
-  case '7':
-  case '8':
-  case '9':
-    index = c - '0';
-    break;
-  default:
-    if (c >= 'a' && c <= 'z') {
-      index = c - 'a' + 10;
+  for (int i = 0; i < alphaChars.length; i++) {
+    if (c == alphaChars[i]) {
+      index = i;
+      break;
     }
-    break;
   }
+  
+  if (index == -1) {
+    if (c != '?') {
+      return;
+    }
+    
+    index = alphaChars.length;
+  }
+  
   copy(alphabet, index * 4, 0, 4, alphabet.height, 0, 0, 4, alphabet.height);
 }
 
@@ -215,11 +200,11 @@ void drawScores() {
   drawString(playerOne, 0, 0);
   translate(40, 0);
   drawNumber(score);
-  popMatrix();
-  translate(144, 4);
+  translate(128, 0);
   drawString(hi, 0, 0);
   translate(40, 0);
   drawNumber(hiScore);
+  popMatrix();
 }
 
 void keyPressed() {
