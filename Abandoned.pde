@@ -34,10 +34,11 @@ char[] hi = "HI:".toCharArray();
 
 color[] palette = basePalette;
 
-int buttons = 0;
-int hiScore = 0;
-int score = 0;
-int level = 0;
+Score[] hiScores;
+int buttons;
+int score;
+int hiScore;
+int level;
 
 float SCALE = 1.0;
 
@@ -102,6 +103,9 @@ void setup() {
   baby.animationSpeed = 8;
 
   levels[0].renderForeground();
+  
+  loadScores();
+  hiScore = hiScores[0].score;
   startGame();
 }
 
@@ -283,4 +287,29 @@ void keyReleased() {
     buttons &= ~16;
     break;
   }
+}
+
+void loadScores() {
+  JSONArray jsonScores = loadJSONObject("high.json").getJSONArray("scores");
+  hiScores = new Score[jsonScores.size()];
+  
+  for (int i = 0; i < hiScores.length; i++) {
+    JSONArray jsonScore = jsonScores.getJSONArray(i);
+    hiScores[i] = new Score(jsonScore.getInt(0), jsonScore.getString(1));
+  }
+}
+
+void saveScores() {
+  JSONObject container = new JSONObject();
+  JSONArray jsonScores = new JSONArray();
+  
+  for (Score score : hiScores) {
+    JSONArray jsonScore = new JSONArray();
+    jsonScore.append(score.score);
+    jsonScore.append(score.name);
+    jsonScores.append(jsonScore);
+  }
+  
+  container.setJSONArray("scores", jsonScores);
+  saveJSONObject(container, "high.json");
 }
