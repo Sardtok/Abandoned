@@ -28,6 +28,9 @@ color[] basePalette = {
   #deeed6
 };
 
+char[] playerOne = "1p:".toCharArray();
+char[] hi = "hi:".toCharArray();
+
 color[] palette = basePalette;
 
 int buttons = 0;
@@ -38,7 +41,6 @@ int level = 0;
 float SCALE = 1.0;
 
 PImage bg;
-PImage fg;
 PImage rat;
 PImage alphabet;
 
@@ -55,7 +57,6 @@ void setup() {
   SCALE = min(width / 192.0, height / 108.0);
 
   bg = loadImage("Background.png");
-  fg = loadImage("FireEscape.png");
   rat = loadImage("Rat.png");
   alphabet = loadImage("Alphabet.png");
 
@@ -135,12 +136,10 @@ void draw() {
   background(palette[0]);
   image(bg, 0, 0);
 
-  for (Platform p : floors) {
-    p.draw();
-  }
-
+  levels[level % levels.length].drawBG();
   baby.draw();
-  image(levels[0].fg, 0, 0);
+  levels[level % levels.length].drawFG();
+  
   drawScores();
 }
 
@@ -164,12 +163,62 @@ void drawNumber(int number) {
   }
 }
 
+void drawChar(char c) {
+  int index = -1;
+  switch (c) {
+  case '.':
+    index = 36;
+    break;
+  case ':':
+    index = 37;
+    break;
+  case '!':
+    index = 38;
+    break;
+  case '?':
+    index = 39;
+    break;
+  case '0':
+  case '1':
+  case '2':
+  case '3':
+  case '4':
+  case '5':
+  case '6':
+  case '7':
+  case '8':
+  case '9':
+    index = c - '0';
+    break;
+  default:
+    if (c >= 'a' && c <= 'z') {
+      index = c - 'a' + 10;
+    }
+    break;
+  }
+  copy(alphabet, index * 4, 0, 4, alphabet.height, 0, 0, 4, alphabet.height);
+}
+
+void drawString(char[] s, float x, float y) {
+  pushMatrix();
+  translate(x, y);
+  for (char c : s) {
+    drawChar(c);
+    translate(5, 0);
+  }
+  popMatrix();
+}
+
 void drawScores() {
   pushMatrix();
-  translate(40, 4);
+  translate(4, 4);
+  drawString(playerOne, 0, 0);
+  translate(40, 0);
   drawNumber(score);
   popMatrix();
-  translate(136, 4);
+  translate(144, 4);
+  drawString(hi, 0, 0);
+  translate(40, 0);
   drawNumber(hiScore);
 }
 

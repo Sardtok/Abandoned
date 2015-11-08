@@ -2,6 +2,16 @@ class Level {
   ArrayList<Platform> floors = new ArrayList<Platform>();
   PGraphics fg = createGraphics(192, 168);
   
+  void drawBG() {
+    for (Platform floor : floors) {
+      floor.draw();
+    }
+  }
+  
+  void drawFG() {
+    image(fg, 0, 0);
+  }
+  
   void renderForeground() {
     fg.beginDraw();
     fg.clear();

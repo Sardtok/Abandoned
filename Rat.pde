@@ -22,7 +22,7 @@ class Rat extends PhysicalObject {
       return;
     }
 
-    score += speed * 100;
+    score((int) (speed * 100));
     speed = min(2, speed + 0.25);
     target = floor.hole;
     state = SCARED;

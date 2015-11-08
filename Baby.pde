@@ -112,6 +112,7 @@ class Baby extends PhysicalObject {
       level++;
       startLevel();
       score = p;
+      score(900 + level * 100);
       dir = RIGHT;
     }
     setAnimation(0);
