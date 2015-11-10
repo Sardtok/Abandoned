@@ -12,7 +12,12 @@ CREDITS = 0,
 MAIN_SCREEN = 1,
 HIGH_SCREEN = 2,
 GAME_OVER = 3,
-PLAYING = 4;
+PLAYING = 4,
+L = 1,
+R = 2,
+U = 4,
+D = 8,
+S = 16;
 
 color[] basePalette = {
   #140c1c, 
@@ -45,7 +50,8 @@ int buttons;
 int score;
 int hiScore;
 int level;
-int state = PLAYING;
+int state = CREDITS;
+int nextState = MAIN_SCREEN;
 int counter = 120;
 
 float SCALE = 1.0;
@@ -63,8 +69,6 @@ void setup() {
   fullScreen(JAVA2D);
   noSmooth();
   noStroke();
-  
-  frameRate(10);
 
   SCALE = min(width / 192.0, height / 108.0);
 
@@ -147,21 +151,22 @@ void startGame() {
 }
 
 void nextState() {
+  state = nextState;
   switch (state) {
     case CREDITS:
-      state = MAIN_SCREEN;
+      nextState = MAIN_SCREEN;
       break;
     case MAIN_SCREEN:
-      state = HIGH_SCREEN;
+      nextState = HIGH_SCREEN;
       break;
     case HIGH_SCREEN:
-      state = MAIN_SCREEN;
+      nextState = MAIN_SCREEN;
       break;
     case GAME_OVER:
-      state = HIGH_SCREEN;
+      nextState = HIGH_SCREEN;
       break;
     default:
-      state = GAME_OVER;
+      nextState = GAME_OVER;
       break;
   }
   
@@ -208,11 +213,21 @@ void drawCredits() {
   drawString("EVERYTHING:".toCharArray(), 69, 40);
   drawString("SIGMUND HANSEN".toCharArray(), 59, 50);
   counter--;
+  
+  if ((buttons & S) != 0) {
+    counter = min(counter, 10);
+  }
 }
 
 void drawMainMenu() {
-  drawString("DUMPSTER BABY".toCharArray(), 69, 50);
+  drawString("DUMPSTER BABY".toCharArray(), 64, 40);
+  drawString("PRESS START".toCharArray(), 69, 50);
   counter--;
+  
+  if ((buttons & S) != 0) {
+    nextState = PLAYING;
+    counter = 10;
+  }
 }
 
 void drawHighScores() {
@@ -231,6 +246,10 @@ void drawHighScores() {
     popMatrix();
   }
   counter--;
+  
+  if ((buttons & S) != 0) {
+    counter = min(counter, 10);
+  }
 }
 
 void drawGameOver() {
@@ -308,38 +327,38 @@ void drawScores() {
 void keyPressed() {
   switch (keyCode) {
   case LEFT:
-    buttons |= 1;
+    buttons |= L;
     break;
   case RIGHT:
-    buttons |= 2;
+    buttons |= R;
     break;
   case UP:
-    buttons |= 4;
+    buttons |= U;
     break;
   case DOWN:
-    buttons |= 8;
+    buttons |= D;
     break;
   case RETURN:
   case ENTER:
-    buttons |= 16;
+    buttons |= S;
     break;
   }
   
   switch (key) {
   case 'a':
-    buttons |= 1;
+    buttons |= L;
     break;
   case 'd':
-    buttons |= 2;
+    buttons |= R;
     break;
   case 'w':
-    buttons |= 4;
+    buttons |= U;
     break;
   case 's':
-    buttons |= 8;
+    buttons |= D;
     break;
   case ' ':
-    buttons |= 16;
+    buttons |= S;
     break;
   }
 }
@@ -347,38 +366,38 @@ void keyPressed() {
 void keyReleased() {
   switch (keyCode) {
   case LEFT:
-    buttons &= ~1;
+    buttons &= ~L;
     break;
   case RIGHT:
-    buttons &= ~2;
+    buttons &= ~R;
     break;
   case UP:
-    buttons &= ~4;
+    buttons &= ~U;
     break;
   case DOWN:
-    buttons &= ~8;
+    buttons &= ~D;
     break;
   case RETURN:
   case ENTER:
-    buttons &= ~16;
+    buttons &= ~S;
     break;
   }
   
   switch (key) {
   case 'a':
-    buttons &= ~1;
+    buttons &= ~L;
     break;
   case 'd':
-    buttons &= ~2;
+    buttons &= ~R;
     break;
   case 'w':
-    buttons &= ~4;
+    buttons &= ~U;
     break;
   case 's':
-    buttons &= ~8;
+    buttons &= ~D;
     break;
   case ' ':
-    buttons &= ~16;
+    buttons &= ~S;
     break;
   }
 }
