@@ -6,4 +6,9 @@ class Score {
     this.score = score;
     this.name = name.toCharArray();
   }
+  
+  Score(int score, char[] name) {
+    this.score = score;
+    this.name = name.clone();
+  }
 }
