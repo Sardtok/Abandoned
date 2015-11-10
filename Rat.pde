@@ -44,7 +44,7 @@ class Rat extends PhysicalObject {
       break;
     case INSIDE:
       state = EXITING;
-      target = 96;
+      target = (floor.right + floor.left) / 2;
       setAnimation(3);
       x = floor.hole;
       dir = target - x > 0 ? RIGHT : LEFT;
@@ -70,13 +70,14 @@ class Rat extends PhysicalObject {
           state = FLEEING;
           target = floor.hole;
         } else if (dir == LEFT) {
-          target = (int) min(168, x + random(32, 128));
+          target = floor.right - 6;//(int) min(floor.right - 6, x + random(32, 128));
         } else {
-          target = (int) max(40, x - random(32, 128));
+          target = floor.right - 6;//(int) max(floor.left + 6, x - random(32, 128));
+          x -= speed;
         }
       } else if (target - x > 0) {
         dir = RIGHT;
-      } else {
+      } else if (target - x < 0) {
         dir = LEFT;
       }
       x += dir == RIGHT ? speed : -speed;
