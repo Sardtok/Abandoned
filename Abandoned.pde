@@ -41,9 +41,8 @@ color[] basePalette = {
 };
 
 /** These characters conform to the Ifi@UiO Arcade machine. */
+HashMap<String, char[]> strings = new HashMap<String, char[]>();
 char[] alphaChars = "0123456789-_.,:;!ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅÄÖÜ".toCharArray();
-char[] playerOne = "1P:".toCharArray();
-char[] hi = "HI:".toCharArray();
 char[] input = new char[3];
 
 color[] palette = basePalette;
@@ -246,8 +245,8 @@ void drawCredits() {
 }
 
 void drawMainMenu() {
-  drawString("DUMPSTER BABY".toCharArray(), 64, 40);
-  drawString("PRESS START".toCharArray(), 69, 50);
+  drawString("DUMPSTER BABY", 64, 40);
+  drawString("PRESS START", 69, 50);
   counter--;
 
   if (counter < STATE_DELAY - 10 && (buttons & S) != 0) {
@@ -257,7 +256,7 @@ void drawMainMenu() {
 }
 
 void drawHighScores() {
-  drawString("TOP 10 HIGH SCORES".toCharArray(), 49, 0);
+  drawString("TOP 10 HIGH SCORES", 49, 0);
   int i = 0;
   for (Score score : hiScores) {
     if (i == 10) {
@@ -338,7 +337,7 @@ void drawGameOver() {
     editDone = false;
   }
 
-  drawString("GAME OVER".toCharArray(), 72, 40);
+  drawString("GAME OVER", 72, 40);
   drawString(input, 96, 50);
   translate(88, 50);
   drawChar(':');
@@ -386,6 +385,14 @@ void drawChar(char c) {
   copy(alphabet, index * 4, 0, 4, alphabet.height, 0, 0, 4, alphabet.height);
 }
 
+void drawString(String s, float x, float y) {
+  if (!strings.containsKey(s)) {
+    strings.put(s, s.toCharArray());
+  }
+  
+  drawString(strings.get(s), x, y);
+}
+
 void drawString(char[] s, float x, float y) {
   pushMatrix();
   translate(x, y);
@@ -399,11 +406,11 @@ void drawString(char[] s, float x, float y) {
 void drawScores() {
   pushMatrix();
   translate(4, 4);
-  drawString(playerOne, 0, 0);
+  drawString("1P:", 0, 0);
   translate(40, 0);
   drawNumber(score, true);
   translate(128, 0);
-  drawString(hi, 0, 0);
+  drawString("HI:", 0, 0);
   translate(40, 0);
   drawNumber(hiScore, true);
   popMatrix();
