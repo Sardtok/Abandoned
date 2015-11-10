@@ -1,9 +1,9 @@
 class Score {
   int score;
-  String name;
+  char[] name;
   
   Score(int score, String name) {
     this.score = score;
-    this.name = name;
+    this.name = name.toCharArray();
   }
 }

@@ -7,7 +7,12 @@ EXITING = 1,
 FLEEING = 2,
 ENTERING = 4,
 SCARED = 8,
-INSIDE = 16;
+INSIDE = 16,
+CREDITS = 0,
+MAIN_SCREEN = 1,
+HIGH_SCREEN = 2,
+GAME_OVER = 3,
+PLAYING = 4;
 
 color[] basePalette = {
   #140c1c, 
@@ -28,6 +33,7 @@ color[] basePalette = {
   #deeed6
 };
 
+/** These characters conform to the Ifi@UiO Arcade machine. */
 char[] alphaChars = "0123456789-_.,:;!ABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅÄÖÜ".toCharArray();
 char[] playerOne = "1P:".toCharArray();
 char[] hi = "HI:".toCharArray();
@@ -39,6 +45,8 @@ int buttons;
 int score;
 int hiScore;
 int level;
+int state = PLAYING;
+int counter = 120;
 
 float SCALE = 1.0;
 
@@ -55,6 +63,8 @@ void setup() {
   fullScreen(JAVA2D);
   noSmooth();
   noStroke();
+  
+  frameRate(10);
 
   SCALE = min(width / 192.0, height / 108.0);
 
@@ -110,8 +120,8 @@ void setup() {
 }
 
 void startLevel() {
-  for (Platform p : floors) {
-    Rat r = p.rat;
+  for (int i = 0; i < floors.length; i++) {
+    Rat r = floors[i].rat;
     
     if (r == null) {
       continue;
@@ -120,7 +130,7 @@ void startLevel() {
     r.speed = 1.0 + min(1, level * 0.25);
     r.x = -16;
     r.state = INSIDE;
-    r.framesLeft = (int) random(120);
+    r.framesLeft = i * 60;
   }
   
   baby.dir = RIGHT;
@@ -136,9 +146,55 @@ void startGame() {
   score = 0;
 }
 
+void nextState() {
+  switch (state) {
+    case CREDITS:
+      state = MAIN_SCREEN;
+      break;
+    case MAIN_SCREEN:
+      state = HIGH_SCREEN;
+      break;
+    case HIGH_SCREEN:
+      state = MAIN_SCREEN;
+      break;
+    case GAME_OVER:
+      state = HIGH_SCREEN;
+      break;
+    default:
+      state = GAME_OVER;
+      break;
+  }
+  
+  counter = 300;
+}
+
 void draw() {
   scale(SCALE);
   background(palette[0]);
+  switch (state) {
+    case CREDITS:
+      drawCredits();
+      break;
+    case MAIN_SCREEN:
+      drawMainMenu();
+      break;
+    case HIGH_SCREEN:
+      drawHighScores();
+      break;
+    case GAME_OVER:
+      drawGameOver();
+      break;
+    default:
+      drawGame();
+      break;
+  }
+  
+  if (counter == 0) {
+    nextState();
+  }
+}
+
+void drawGame() {
   image(bg, 0, 0);
 
   levels[level % levels.length].drawBG();
@@ -146,6 +202,40 @@ void draw() {
   levels[level % levels.length].drawFG();
   
   drawScores();
+}
+
+void drawCredits() {
+  drawString("EVERYTHING:".toCharArray(), 69, 40);
+  drawString("SIGMUND HANSEN".toCharArray(), 59, 50);
+  counter--;
+}
+
+void drawMainMenu() {
+  drawString("DUMPSTER BABY".toCharArray(), 69, 50);
+  counter--;
+}
+
+void drawHighScores() {
+  drawString("TOP 10 HIGH SCORES".toCharArray(), 49, 0);
+  for (int i = 0; i < 10; i++) {
+    pushMatrix();
+    translate(12, i * 10 + 10);
+    drawNumber(i + 1, false);
+    popMatrix();
+    pushMatrix();
+    translate(17, i * 10 + 10);
+    drawChar('.');
+    drawString(hiScores[i].name, 5, 0);
+    translate(140, 0);
+    drawNumber(hiScores[i].score, true);
+    popMatrix();
+  }
+  counter--;
+}
+
+void drawGameOver() {
+  drawString("GAME OVER".toCharArray(), 69, 50);
+  counter--;
 }
 
 void score(int points) {
@@ -159,12 +249,16 @@ void score(int points) {
   hiScore %= 1000000;
 }
 
-void drawNumber(int number) {
+void drawNumber(int number, boolean leadingZeroes) {
   for (int i = 0; i < 6; i++) {
     int digit = number % 10;
     number /= 10;
     copy(alphabet, digit * 4, 0, 4, alphabet.height, 0, 0, 4, alphabet.height);
     translate(-5, 0);
+    
+    if (!leadingZeroes && number == 0) {
+      break;
+    }
   }
 }
 
@@ -203,11 +297,11 @@ void drawScores() {
   translate(4, 4);
   drawString(playerOne, 0, 0);
   translate(40, 0);
-  drawNumber(score);
+  drawNumber(score, true);
   translate(128, 0);
   drawString(hi, 0, 0);
   translate(40, 0);
-  drawNumber(hiScore);
+  drawNumber(hiScore, true);
   popMatrix();
 }
 
@@ -306,7 +400,7 @@ void saveScores() {
   for (Score score : hiScores) {
     JSONArray jsonScore = new JSONArray();
     jsonScore.append(score.score);
-    jsonScore.append(score.name);
+    jsonScore.append(new String(score.name));
     jsonScores.append(jsonScore);
   }
   
