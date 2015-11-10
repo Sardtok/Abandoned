@@ -146,6 +146,7 @@ void startLevel() {
 
 void startGame() {
   level = 0;
+  baby.lives = 3;
   startLevel();
   score = 0;
 }

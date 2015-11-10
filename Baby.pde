@@ -8,6 +8,7 @@ class Baby extends PhysicalObject {
     };
   }
 
+  int lives;
   float pX;
   boolean isMoving = false;
   Platform currentFloor;
@@ -106,7 +107,12 @@ class Baby extends PhysicalObject {
   void animationComplete() {
     state &= ~SLAM;
     if (state == SCARED) {
-      startGame();
+      lives--;
+      if (lives == 0) {
+        counter = 0;
+      } else {
+        startLevel();
+      }
     } else if (state == ENTERING) {
       int p = score;
       level++;

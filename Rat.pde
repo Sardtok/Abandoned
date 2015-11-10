@@ -70,9 +70,9 @@ class Rat extends PhysicalObject {
           state = FLEEING;
           target = floor.hole;
         } else if (dir == LEFT) {
-          target = floor.right - 6;//(int) min(floor.right - 6, x + random(32, 128));
+          target = (int) min(floor.right - 6, x + random(32, 128));
         } else {
-          target = floor.right - 6;//(int) max(floor.left + 6, x - random(32, 128));
+          target = (int) max(floor.left + 6, x - random(32, 128));
           x -= speed;
         }
       } else if (target - x > 0) {
