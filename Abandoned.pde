@@ -65,6 +65,7 @@ boolean editDone;
 
 float SCALE = 1.0;
 
+PImage credits;
 PImage bg;
 PImage rat;
 PImage alphabet;
@@ -81,6 +82,7 @@ void setup() {
 
   SCALE = min(width / 192.0, height / 108.0);
 
+  credits = loadImage("Credits.png");
   bg = loadImage("Background.png");
   rat = loadImage("Rat.png");
   alphabet = loadImage("Alphabet.png");
@@ -235,8 +237,7 @@ void drawGame() {
 }
 
 void drawCredits() {
-  drawString("EVERYTHING:".toCharArray(), 69, 40);
-  drawString("SIGMUND HANSEN".toCharArray(), 59, 50);
+  image(credits, 0, 0);
   counter--;
 
   if (counter < STATE_DELAY - 10 && (buttons & S) != 0) {
